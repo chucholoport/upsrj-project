@@ -28,8 +28,6 @@
 # Author: Jesus Lopez
 # Contact: https://github.com/chucholoport
 # =============================================================================
-version: "3.9"
-
 services:
 
   ros2_arduino:
@@ -113,3 +111,4 @@ services:
     #
     devices:
       - "/dev:/dev"
+    privileged: true

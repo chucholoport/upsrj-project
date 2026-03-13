@@ -4,11 +4,12 @@
 # =============================================================================
 #
 # This script resolves the ROS2 development environment configuration
-# based on CLI arguments. It is shared by multiple launcher scripts
-# such as:
+# based on CLI arguments. It is shared by multiple launcher scripts such as:
 #
 #   dev.sh
+#   build.sh
 #   enter.sh
+#   stop.sh
 #
 # Responsibilities:
 #
@@ -25,9 +26,14 @@
 
 
 # -----------------------------------------------------------------------------
-# Resolve project root directory
+# Resolve script directory
 # -----------------------------------------------------------------------------
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+
+# -----------------------------------------------------------------------------
+# Resolve project root directory
+# -----------------------------------------------------------------------------
 PROJECT_ROOT="$( cd "$SCRIPT_DIR/../../.." && pwd )"
 
 
@@ -42,6 +48,16 @@ fi
 
 
 # -----------------------------------------------------------------------------
+# Default configuration
+# -----------------------------------------------------------------------------
+DEFAULT_PLATFORM="${DEFAULT_PLATFORM:-arduino}"
+DEFAULT_ROS="${DEFAULT_ROS:-ros2_jazzy}"
+
+PLATFORM="$DEFAULT_PLATFORM"
+ROS_DISTRO="$DEFAULT_ROS"
+
+
+# -----------------------------------------------------------------------------
 # Supported ROS distro aliases
 # -----------------------------------------------------------------------------
 declare -A ROS_MAP
@@ -53,31 +69,33 @@ ROS_MAP["iron"]="ros2_iron"
 # -----------------------------------------------------------------------------
 # Parse CLI arguments
 # -----------------------------------------------------------------------------
-ARG1="$1"
-ARG2="$2"
-
-# Initialize defaults
-DEFAULT_PLATFORM="${DEFAULT_PLATFORM:-arduino}"
-DEFAULT_ROS="${DEFAULT_ROS:-ros2_jazzy}"
+ARG1="${1:-}"
+ARG2="${2:-}"
 
 
-# If first argument matches ROS distro
-if [[ -n "${ROS_MAP[$ARG1]}" ]]; then
+# -----------------------------------------------------------------------------
+# Argument 1
+# -----------------------------------------------------------------------------
+if [ -n "$ARG1" ]; then
 
-    ROS_DISTRO="${ROS_MAP[$ARG1]}"
-    PLATFORM="$DEFAULT_PLATFORM"
-
-elif [ -n "$ARG1" ]; then
-
-    PLATFORM="$ARG1"
+    # If ARG1 matches a ROS alias
+    if [[ -v ROS_MAP["$ARG1"] ]]; then
+        ROS_DISTRO="${ROS_MAP[$ARG1]}"
+    else
+        PLATFORM="$ARG1"
+    fi
 
 fi
 
 
-# If second argument matches ROS distro
-if [[ -n "${ROS_MAP[$ARG2]}" ]]; then
+# -----------------------------------------------------------------------------
+# Argument 2
+# -----------------------------------------------------------------------------
+if [ -n "$ARG2" ]; then
 
-    ROS_DISTRO="${ROS_MAP[$ARG2]}"
+    if [[ -v ROS_MAP["$ARG2"] ]]; then
+        ROS_DISTRO="${ROS_MAP[$ARG2]}"
+    fi
 
 fi
 
@@ -92,3 +110,19 @@ COMPOSE_DIR="$PROJECT_ROOT/.docker/$PLATFORM/$ROS_DISTRO"
 # Container naming convention
 # -----------------------------------------------------------------------------
 CONTAINER_NAME="${ROS_DISTRO}_${PLATFORM}"
+
+
+# -----------------------------------------------------------------------------
+# Validate configuration
+# -----------------------------------------------------------------------------
+if [ ! -d "$COMPOSE_DIR" ]; then
+
+    echo ""
+    echo "ERROR: Docker configuration not found"
+    echo ""
+    echo "Expected directory:"
+    echo "  $COMPOSE_DIR"
+    echo ""
+    exit 1
+
+fi
