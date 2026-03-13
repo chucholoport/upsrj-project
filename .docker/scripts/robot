@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# =============================================================================
+# Robot Development CLI
+# =============================================================================
+#
+# This command provides a unified interface for managing the robotics
+# development environment used in this project.
+#
+# Available commands:
+#
+#   robot dev       Build and start the ROS2 development container
+#   robot enter     Open a shell inside the running container
+#   robot stop      Stop the development container
+#   robot rebuild   Rebuild the container image
+#   robot flash     Flash firmware to a microcontroller
+#
+# Examples:
+#
+#   robot dev
+#   robot dev raspberry
+#   robot enter
+#   robot stop
+#   robot rebuild
+#   robot flash
+#   robot flash esp32
+#
+# Author: Jesus Lopez
+# Contact: https://github.com/chucholoport
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# Resolve script directory
+# -----------------------------------------------------------------------------
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+
+# -----------------------------------------------------------------------------
+# Parse command
+# -----------------------------------------------------------------------------
+COMMAND="$1"
+shift
+
+
+# -----------------------------------------------------------------------------
+# Command dispatcher
+# -----------------------------------------------------------------------------
+case "$COMMAND" in
+
+    dev)
+        "$SCRIPT_DIR/dev.sh" "$@"
+        ;;
+
+    build)
+        "$SCRIPT_DIR/build.sh" "$@"
+        ;;
+
+    rebuild)
+        "$SCRIPT_DIR/rebuild.sh" "$@"
+        ;;
+
+    enter)
+        "$SCRIPT_DIR/enter.sh" "$@"
+        ;;
+
+    stop)
+        "$SCRIPT_DIR/stop.sh" "$@"
+        ;;
+
+    clean)
+        "$SCRIPT_DIR/clean.sh" "$@"
+        ;;
+
+    flash)
+        "$SCRIPT_DIR/flash.sh" "$@"
+        ;;
+
+    ""|help|-h|--help)
+        echo ""
+        echo "Robot Development CLI"
+        echo ""
+        echo "Usage:"
+        echo "  robot <command> [options]"
+        echo ""
+        echo "Commands:"
+        echo "  dev        Build and start development container"
+        echo "  build      Build container image"
+        echo "  rebuild    Rebuild container image (no cache)"
+        echo "  enter      Open shell in container"
+        echo "  stop       Stop development container"
+        echo "  clean      Remove container and image"
+        echo "  flash      Flash firmware to microcontroller"
+        echo ""
+        exit 0
+        ;;
+
+    *)
+        echo "Unknown command: $COMMAND"
+        echo ""
+        echo "Run 'robot help' for usage."
+        exit 1
+        ;;
+
+esac
