@@ -17,7 +17,7 @@
 #   /app
 #      ├── python
 #      ├── sketch
-#      └── ros2_ws
+#      └── ws
 #
 # Author: Jesus Lopez
 # Contact: https://github.com/chucholoport
@@ -37,7 +37,7 @@ FROM docker.io/ros:jazzy-ros-base
 # -----------------------------------------------------------------------------
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DOMAIN_ID=0
-ENV WORKSPACE=/app/ros2_ws
+ENV WORKSPACE=/app/ws
 
 
 # -----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ WORKDIR /app
 # Automatically source ROS2 and the workspace when a shell starts.
 #
 RUN echo "source /opt/ros/jazzy/setup.bash" >> /root/.bashrc && \
-    echo "if [ -f /app/ros2_ws/install/setup.bash ]; then source /app/ros2_ws/install/setup.bash; fi" >> /root/.bashrc
+    echo "if [ -f /app/ws/install/setup.bash ]; then source /app/ws/install/setup.bash; fi" >> /root/.bashrc
 
 
 # -----------------------------------------------------------------------------

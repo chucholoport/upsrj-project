@@ -14,7 +14,7 @@
 #
 #   /app/python    -> Arduino Cloud Python client
 #   /app/sketch    -> Arduino firmware source
-#   /app/ros2_ws   -> ROS2 workspace for robotics packages
+#   /app/ws   -> ROS2 workspace for robotics packages
 #
 # This architecture keeps:
 #
@@ -63,7 +63,7 @@ services:
     environment:
 
       - ROS_DOMAIN_ID=0
-      - WORKSPACE=/app/ros2_ws
+      - WORKSPACE=/app/ws
 
     # -------------------------------------------------------------------------
     # Volume mappings
@@ -83,7 +83,7 @@ services:
       - ../../../sketch:/app/sketch
 
       # ROS2 workspace for robotics packages
-      - ../../../ros2_ws:/app/ros2_ws
+      - ../../../ws:/app/ws
 
     # -------------------------------------------------------------------------
     # Working directory
