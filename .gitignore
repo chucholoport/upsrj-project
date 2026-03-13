@@ -2,9 +2,11 @@
 # ROS2 Workspace
 # =============================================================================
 #
-# ROS2 generates build artifacts that should not be committed.
+# The workspace is part of the infrastructure template.
+# Individual ROS packages should be cloned by each project.
 #
 
+ws/src/
 ws/build/
 ws/install/
 ws/log/
